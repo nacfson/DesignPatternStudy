@@ -19,15 +19,15 @@ public class RaycastHandler : MonoBehaviour
         _line = GetComponent<LineRenderer>();
         _basePos = transform.Find("BasePosition").GetComponent<Transform>();
 
-        _agentInput.OnLMouseClicked += LookRotation;
-        _agentInput.OnLMouseClicked += ShootRay;
+        // _agentInput.OnLMouseClicked += LookRotation;
+        // _agentInput.OnLMouseClicked += ShootRay;
     }
 
 
     private void OnDisable()
     {
-        _agentInput.OnLMouseClicked -= LookRotation;
-        _agentInput.OnLMouseClicked -= ShootRay;
+        // _agentInput.OnLMouseClicked -= LookRotation;
+        // _agentInput.OnLMouseClicked -= ShootRay;
     }
 
     IEnumerator DrawLine(float delayTime,Vector3 hitPos)

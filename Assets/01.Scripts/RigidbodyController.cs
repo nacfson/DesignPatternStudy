@@ -15,7 +15,7 @@ public class RigidbodyController : MonoBehaviour
         _rigid = GetComponent<Rigidbody>();
         //_agentInput.OnPointerPositionChanged += Move;
         canMove = false;
-        _agentInput.OnPointerPositionChanged += CalculatePos;
+        //_agentInput.OnPointerPositionChanged += CalculatePos;
     }
     void Update()
     {

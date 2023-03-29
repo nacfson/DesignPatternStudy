@@ -1,3 +1,4 @@
+using System.Dynamic;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,26 +6,26 @@ using System;
 using static Core.Define;
 public class AgentInput : MonoBehaviour
 {
-    private RigidbodyController _rbController;
-    public event Action OnPointerPositionChanged;
-    public event Action OnLMouseClicked;
+    //private RigidbodyController _rbController;
+    public event Action OnRightClicked;
+    public event Action<Vector3> OnLMouseClicked;
 
     [SerializeField]
     private LayerMask _isGround;
     private void Awake()
     {
-        _rbController = GetComponent<RigidbodyController>();
+        //_rbController = GetComponent<RigidbodyController>();
     }
 
     void Update()
     {
         if(Input.GetMouseButtonDown(1))
         {
-            OnPointerPositionChanged?.Invoke();
+            OnRightClicked?.Invoke();
         }
         if(Input.GetMouseButtonDown(0))
         { 
-            OnLMouseClicked?.Invoke();
+            OnLMouseClicked?.Invoke(GetMouseWorldPoint());
         }
     }
 
