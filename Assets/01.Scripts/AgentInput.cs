@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using static Core.Define;
 public class AgentInput : MonoBehaviour
 {
-    public Camera MainCam;
     private RigidbodyController _rbController;
     public event Action OnPointerPositionChanged;
     public event Action OnLMouseClicked;
@@ -13,7 +13,6 @@ public class AgentInput : MonoBehaviour
     private LayerMask _isGround;
     private void Awake()
     {
-        MainCam = Camera.main;
         _rbController = GetComponent<RigidbodyController>();
     }
 
@@ -24,7 +23,7 @@ public class AgentInput : MonoBehaviour
             OnPointerPositionChanged?.Invoke();
         }
         if(Input.GetMouseButtonDown(0))
-        {
+        { 
             OnLMouseClicked?.Invoke();
         }
     }
