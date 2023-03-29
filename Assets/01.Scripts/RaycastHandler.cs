@@ -51,9 +51,14 @@ public class RaycastHandler : MonoBehaviour
                 Debug.Log(hit.collider.name);
                 StopAllCoroutines();
                 StartCoroutine(DrawLine(0.1f,hit.point));
-                Rigidbody rigid = hit.collider.GetComponent<Rigidbody>();
-                Vector3 forceDirection = hit.collider.transform.position - transform.position;
-                rigid.AddForce(forceDirection * _forcePower,ForceMode.Impulse);
+                // Rigidbody rigid = hit.collider.GetComponent<Rigidbody>();
+                // Vector3 forceDirection = hit.collider.transform.position - transform.position;
+                // rigid.AddForce(forceDirection * _forcePower,ForceMode.Impulse);
+                if(hit.collider.GetComponentInParent<CrashBlock>() != null)
+                {
+                    CrashBlock cb = hit.collider.GetComponentInParent<CrashBlock>();
+                    cb.ForceObject();
+                }
             }
         }
     }
