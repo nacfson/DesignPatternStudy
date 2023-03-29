@@ -1,3 +1,4 @@
+using System.Threading;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,29 +9,37 @@ public class AgentMovement : MonoBehaviour
     private AgentInput _agentInput;
     private CharacterController _controller;
     private float _playerSpeed =5f;
+    private Vector3 _movementVelocity;
 
     private void Awake()
     {
         _controller = GetComponent<CharacterController>();
         _agentInput = GetComponent<AgentInput>();
-        _agentInput.OnLMouseClicked += Move;
+        _agentInput.OnLMouseClicked += SetMovementVelocity;
+        _agentInput.OnLMouseClicked += LookRotation;
     }
 
-    private void Move(Vector3 dir)
+    public void SetMovementVelocity(Vector3 value)
     {
-        StopAllCoroutines();
-        StartCoroutine(MoveCor(dir));
+        _movementVelocity = value;
     }
 
-    IEnumerator MoveCor(Vector3 dir)
+    void FixedUpdate()
     {
-        while(Vector3.Distance(transform.position, dir) > 0.1f)
-        {
-            Vector3 direction = dir-transform.position;
-            direction.y = 0;
-            transform.rotation = Quaternion.LookRotation(dir.normalized);
-            _controller.Move(transform.forward * Time.deltaTime * _playerSpeed);
-            yield return null;
-        }
+        Move();
     }
+
+    private void Move()
+    {
+        float moveSpeed = 5f; // 이동 속도
+        Vector3 direction = (_movementVelocity - transform.position).normalized;
+        _controller.Move(direction * moveSpeed * Time.deltaTime);
+    }
+
+    private void LookRotation(Vector3 dir)
+    {
+        dir.y = 0;
+        transform.rotation = Quaternion.LookRotation(dir);
+    }
+
 }

@@ -11,23 +11,16 @@ public class RaycastHandler : MonoBehaviour
     [SerializeField]
     private float _forcePower;
     private LineRenderer _line;
+    [SerializeField]
     private Transform _basePos;
+    private bool _canShoot = true;
 
     void Awake()
     {
         _agentInput =GetComponent<AgentInput>();
         _line = GetComponent<LineRenderer>();
-        _basePos = transform.Find("BasePosition").GetComponent<Transform>();
-
-        // _agentInput.OnLMouseClicked += LookRotation;
-        // _agentInput.OnLMouseClicked += ShootRay;
-    }
-
-
-    private void OnDisable()
-    {
-        // _agentInput.OnLMouseClicked -= LookRotation;
-        // _agentInput.OnLMouseClicked -= ShootRay;
+        _basePos = transform.Find("Cube").transform.Find("BasePosition");
+        _agentInput.OnRightClicked += ShootRay;
     }
 
     IEnumerator DrawLine(float delayTime,Vector3 hitPos)
@@ -41,27 +34,32 @@ public class RaycastHandler : MonoBehaviour
 
     private void ShootRay()
     {
-        Ray ray = new Ray(transform.position, transform.forward);
+        if(_canShoot == false) return;
+        StartCoroutine(ShootingDelay());
+        LookRotation();
+        Ray ray = new Ray(_basePos.position, _basePos.forward);
         RaycastHit hit;
         bool result = Physics.Raycast(ray,out hit,_rayDistance);
         if(result)
         {
             if(hit.collider != null)
             {
-                Debug.Log(hit.collider.name);
-                StopAllCoroutines();
-                StartCoroutine(DrawLine(0.1f,hit.point));
-                // Rigidbody rigid = hit.collider.GetComponent<Rigidbody>();
-                // Vector3 forceDirection = hit.collider.transform.position - transform.position;
-                // rigid.AddForce(forceDirection * _forcePower,ForceMode.Impulse);
-                if(hit.collider.GetComponentInParent<CrashBlock>() != null)
+                StartCoroutine(DrawLine(0.05f,hit.point));
+                if(hit.collider.GetComponent<CubeHP>() != null)
                 {
-                    CrashBlock cb = hit.collider.GetComponentInParent<CrashBlock>();
-                    cb.ForceObject();
+                    hit.collider.GetComponent<CubeHP>().Damage(1);
                 }
             }
         }
     }
+
+    IEnumerator ShootingDelay()
+    {
+        _canShoot = false;
+        yield return new WaitForSeconds(1f);
+        _canShoot = true;
+    }
+
     //왜 dir 을 0 으로 했을 때 정확한 방향으로 돌아갈까
     private void LookRotation()
     {
@@ -69,14 +67,11 @@ public class RaycastHandler : MonoBehaviour
         dir.y = 0;
         transform.rotation = Quaternion.LookRotation(dir);
     }
-    /// <summary>
-    /// Callback to draw gizmos that are pickable and always drawn.
-    /// </summary>
+
     private void OnDrawGizmos()
     {
-        Ray ray = new Ray(transform.position, transform.forward);
         Gizmos.color = Color.red;
-        Gizmos.DrawRay(transform.position ,transform.forward * _rayDistance);
+        Gizmos.DrawRay(_basePos.position, _basePos.forward* _rayDistance);
     }
 }
 

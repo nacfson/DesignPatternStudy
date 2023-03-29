@@ -19,7 +19,7 @@ public class AgentInput : MonoBehaviour
 
     void Update()
     {
-        if(Input.GetMouseButtonDown(1))
+        if(Input.GetMouseButton(1))
         {
             OnRightClicked?.Invoke();
         }
